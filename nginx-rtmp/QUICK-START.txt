@@ -1,0 +1,100 @@
+========================================
+      NGINX-RTMP QUICK START GUIDE
+      OBS → rtmp://localhost:1935/live → nginx.exe → http://localhost:8080 → serveo.net
+========================================
+
+🚀 BƯỚC 1: KHỞI ĐỘNG SERVER
+--------------------------
+1. Double-click "start-streaming.bat"
+2. Đợi server khởi động (khoảng 5 giây)
+3. Server sẽ tự động mở trình duyệt
+
+🎥 BƯỚC 2: CẤU HÌNH OBS
+-----------------------
+1. Mở OBS Studio
+2. Settings → Stream
+3. Service: Custom
+4. Server: rtmp://localhost:1935/live
+5. Stream Key: live (hoặc tên bất kỳ)
+6. Click "Start Streaming"
+
+🌐 BƯỚC 3: XEM STREAM
+---------------------
+Local:  http://localhost:8080
+Status: http://localhost:8080/stat
+
+📤 BƯỚC 4: CHIA SẺ INTERNET (TÙY CHỌN)
+--------------------------------------
+Chọn 1 trong các cách sau:
+
+CÁCH 1: Serveo (Khuyến nghị)
+---------------------------
+ssh -R 80:localhost:8080 serveo.net
+→ Link: https://xxxxx.serveo.net
+
+CÁCH 2: Ngrok
+-------------
+ngrok http 8080
+→ Link: https://xxxxx.ngrok.io
+
+CÁCH 3: Cloudflare Tunnel
+-------------------------
+cloudflared tunnel --url http://localhost:8080
+→ Link: https://xxxxx.trycloudflare.com
+
+CÁCH 4: Port Forwarding
+-----------------------
+Cấu hình router mở port 8080
+→ Link: http://YOUR_PUBLIC_IP:8080
+
+🛑 BƯỚC 5: DỪNG SERVER
+----------------------
+Double-click "stop.bat"
+
+========================================
+           TROUBLESHOOTING
+========================================
+
+❌ Lỗi "Port 8080 is already in use"
+→ Chạy "stop.bat" trước, sau đó chạy lại
+
+❌ OBS không connect được
+→ Kiểm tra Server: rtmp://localhost:1935/live
+
+❌ Video không hiển thị
+→ Đợi 5-10 giây sau khi bắt đầu stream
+
+❌ Màn hình đen
+→ Kiểm tra OBS đã chọn đúng source chưa
+
+❌ Không thể xóa thư mục
+→ Chạy "force-cleanup.bat" hoặc restart máy
+
+========================================
+              FILE STRUCTURE
+========================================
+
+start-streaming.bat  → Khởi động toàn bộ server
+stop.bat            → Dừng toàn bộ server
+install.bat         → Cài đặt cho người dùng mới
+force-cleanup.bat   → Dọn dẹp processes khi có lỗi
+nginx.exe           → Nginx server chính
+conf/nginx.conf     → File cấu hình
+html/index.html     → Trang xem stream
+html/stat.xsl       → Template statistics
+logs/               → Thư mục log files
+
+========================================
+              SYSTEM REQUIREMENTS
+========================================
+
+✓ Windows 7/8/10/11
+✓ 2GB RAM
+✓ 100MB free disk space
+✓ Internet connection (cho chia sẻ)
+
+========================================
+Support: GitHub Issues
+Version: 1.0
+Date: 2025-09-22
+========================================
