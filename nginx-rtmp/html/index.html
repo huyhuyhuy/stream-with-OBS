@@ -31,6 +31,7 @@
     </video>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <script>
         const video = document.getElementById('videoPlayer');
         const videoSrc = '/hls/live.m3u8';
@@ -38,12 +39,33 @@
         if (Hls.isSupported()) {
             const hls = new Hls({
                 liveSyncDurationCount: 1,
-                liveMaxLatencyDurationCount: 3
+                liveMaxLatencyDurationCount: 3,
+                debug: true
             });
             hls.loadSource(videoSrc);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                console.log('HLS manifest loaded successfully');
                 video.play();
+            });
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                console.error('HLS error:', data);
+                if (data.fatal) {
+                    switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.log('Network error, trying to recover...');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.log('Media error, trying to recover...');
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            console.log('Fatal error, destroying HLS instance');
+                            hls.destroy();
+                            break;
+                    }
+                }
             });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = videoSrc;

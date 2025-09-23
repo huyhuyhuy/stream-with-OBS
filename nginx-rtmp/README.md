@@ -1,115 +1,52 @@
-# NGINX-RTMP Live Streaming Server
 
-🚀 **Easy-to-use RTMP streaming server for Windows with HLS support**
+    HƯỚNG DẪN LIVE STREAMING NGINX-RTMP
+   OBS → nginx-rtmp → Cloudflare Tunnel → Internet
 
-## ✨ Features
+--------------------
+OBS Studio → rtmp://localhost:1935/live → nginx-rtmp → http://localhost:8080 → Cloudflare Tunnel → https://xxxxx.trycloudflare.com
 
-- ✅ **RTMP Server** on port 1935
-- ✅ **HTTP Server** on port 8080  
-- ✅ **HLS (HTTP Live Streaming)** support
-- ✅ **DASH** streaming support
-- ✅ **Auto-recording** to FLV files
-- ✅ **Web-based viewer** with HLS.js
-- ✅ **Real-time statistics** at `/stat`
-- ✅ **Easy OBS integration**
-- ✅ **Internet sharing** via ngrok/serveo/cloudflare
-- ✅ **One-click installer**
 
-## 🚀 Quick Start
+BƯỚC 1: KHỞI ĐỘNG SERVER STREAMING
+- Chuột phải -> chạy với quyền admin file: start-stream.bat
+- Chờ 1 lúc kết quả thu được dạng: 
+Your quick Tunnel has been created! Visit it at:
+https://jade-theft-swing-relate.trycloudflare.com
+-> đây chính là link để mọi người xem được video stream.
 
-### For New Users:
-1. Run `install.bat` (as Administrator)
-2. Double-click `start-streaming.bat`
-3. Configure OBS: `rtmp://localhost:1935/live`
-4. Start streaming!
+BƯỚC 2: CHẠY OBS STUDIO
+Lần đầu cần cài đặt server stream:
+1. Mở OBS Studio
+2. Settings → Stream
+3. Service: Custom
+4. Server: rtmp://localhost:1935/live
+5. Stream Key: live
 
-### For Existing Users:
-1. Double-click `start-streaming.bat`
-2. View stream at: `http://localhost:8080`
+Từ lần sau chỉ cần mở chọn video/cửa sổ chrome... bạn cần stream
+XXong -> Click "Start Streaming"
 
-## 🎥 OBS Studio Settings
+-> Bây giờ moij người có thể xem bạn stream qua link: https://xxxxx.trycloudflare.com (từ Bước 1)
 
-```
-Service: Custom
-Server: rtmp://localhost:1935/live
-Stream Key: live
-```
+DỪNG STREAMING
+=================
+- để dừng hết -> Chuột phải -> chạy với quyền admin file: stop.bat
 
-## 🌐 URLs
 
-- **Web Viewer**: http://localhost:8080
-- **HLS Stream**: http://localhost:8080/hls/live.m3u8  
-- **Statistics**: http://localhost:8080/stat
-- **Health Check**: http://localhost:8080/health
+* CHÚ Ý: mỗi lần chạy mới sẽ tạo 1 link web khác nhau.
 
-## 📤 Share to Internet
+Nếu có lỗi
+==================
+"nginx.exe not found"
+- hãy kiểm tra lại và đảm bảo bạn đang chạy từ thư mục nginx-rtmp, và thư mục này đã có nginx.exe
+- nếu bị mất hẫy lên mạng tải lại và lưu file nginx.exe vào thư mục nginx-rtmp
 
-Choose one method:
+"cloudflared.exe not found"
+- hãy kiểm tra lại và đảm bảo bạn đang chạy từ thư mục nginx-rtmp, và thư mục này đã có cloudflared.exe 
+- nếu k hãy tải về từ: https://github.com/cloudflare/cloudflared/releases/latest
+- Lưu cloudflared.exe vào thư mục nginx-rtmp
 
-### Serveo (Recommended)
-```bash
-ssh -R 80:localhost:8080 serveo.net
-```
+OBS không thể kết nối
+- Kiểm tra cài đặt stream ở OBS đã để server là máy localhost chưa: rtmp://localhost:1935/live
+- Đảm bảo nginx đang chạy (phải chạy start-stream.bat (bước 1) trước)
 
-### Ngrok
-```bash
-ngrok http 8080
-```
-
-### Cloudflare Tunnel
-```bash
-cloudflared tunnel --url http://localhost:8080
-```
-
-## 📁 File Structure
-
-```
-nginx-rtmp/
-├── start-streaming.bat    # 🚀 Main launcher
-├── stop.bat              # 🛑 Stop server
-├── install.bat           # 💾 First-time setup
-├── force-cleanup.bat     # 🧹 Fix stuck processes
-├── QUICK-START.txt       # 📋 Quick guide
-├── README.md             # 📖 This documentation
-├── nginx.exe             # ⚙️ Main server
-├── nssm.exe              # 🔧 Service manager
-├── conf/nginx.conf       # ⚙️ Configuration
-├── html/
-│   ├── index.html        # 🌐 Web viewer
-│   └── stat.xsl          # 📊 Statistics template
-└── logs/                 # 📝 Log files
-```
-
-## 🛠️ Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| Port 8080 in use | Run `stop.bat` first |
-| OBS can't connect | Check server: `rtmp://localhost:1935/live` |
-| Black screen | Wait 5-10 seconds after starting stream |
-| Can't delete folder | Run `force-cleanup.bat` or restart Windows |
-
-## 🔧 Technical Details
-
-- **Nginx**: 1.13.12+ with RTMP module
-- **HLS Fragment**: 2 seconds  
-- **Playlist Length**: 10 seconds
-- **Recording Format**: FLV
-- **Streaming Protocol**: RTMP → HLS conversion
-
-## 📋 System Requirements
-
-- ✅ Windows 7/8/10/11
-- ✅ 2GB RAM minimum
-- ✅ 100MB free disk space
-- ✅ Internet connection (for sharing)
-
-## 🎯 Version
-
-**Version**: 1.0  
-**Date**: 2025-09-22  
-**Support**: GitHub Issues
-
----
-
-Made with ❤️ for easy live streaming
+link web k xem dc, hiển thị màn hình trắng
+- Đợi 10-15 giây sau khi bắt đầu stream OBS xem sao. có thể bị lag.

@@ -1,31 +1,40 @@
 @echo off
-title Stop NGINX-RTMP Server
+title Stopping NGINX-RTMP Server + Cloudflare Tunnel
 color 0C
 
+REM Change to script directory
+cd /d "%~dp0"
+
 echo ========================================
-echo   STOPPING NGINX-RTMP SERVER
+echo   STOPPING STREAMING + TUNNEL
 echo ========================================
 echo.
 
-echo [STEP 1] Stopping Nginx server...
-nginx.exe -s stop >nul 2>&1
+echo [STEP 1] Stopping Cloudflare tunnel...
+taskkill /f /im cloudflared.exe >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [OK] Cloudflare tunnel stopped
+) else (
+    echo [INFO] No Cloudflare tunnel running
+)
+
+echo [STEP 2] Stopping Nginx server...
+.\nginx.exe -s stop >nul 2>&1
 if %errorlevel% equ 0 (
     echo [OK] Nginx stopped successfully
 ) else (
     echo [INFO] Nginx was not running or already stopped
 )
 
-echo [STEP 2] Killing any remaining nginx processes...
+echo [STEP 3] Killing any remaining processes...
 taskkill /f /im nginx.exe >nul 2>&1
-echo [OK] All nginx processes terminated
-
-echo [STEP 3] Stopping HLS sync processes...
-taskkill /f /im cmd.exe /fi "WINDOWTITLE eq*sync-hls-continuous*" >nul 2>&1
-echo [OK] HLS sync processes stopped
+taskkill /f /im cloudflared.exe >nul 2>&1
+echo [OK] All processes terminated
 
 echo.
 echo ========================================
 echo [✓] All services stopped successfully!
 echo ========================================
+echo [INFO] To restart: start-stream.bat
 echo.
 pause
