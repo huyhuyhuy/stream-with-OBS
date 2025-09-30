@@ -48,20 +48,20 @@
     /* Nút bật/tắt tiếng */
     .mute-button {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
+      bottom: 10px;       /* tụt xuống thấp hơn */
+      right: 50px;        /* sang trái 1 chút (tiến về giữa) */
+      background: transparent;
       color: white;
       border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      font-size: 22px;
+      border-radius: 50%; /* hình tròn */
+      width: 40px;        /* nhỏ lại */
+      height: 40px;
+      font-size: 13px;    /* icon nhỏ hơn */
       cursor: pointer;
       z-index: 10;
-      display: none; /* mặc định ẩn, chỉ hiện khi video chạy */
+      display: none;      /* chỉ hiện khi video chạy */
     }
-    .mute-button:hover { background: rgba(0,0,0,0.8); }
+
   </style>
 </head>
 <body>

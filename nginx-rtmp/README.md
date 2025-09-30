@@ -50,3 +50,34 @@ OBS không thể kết nối
 
 link web k xem dc, hiển thị màn hình trắng
 - Đợi 10-15 giây sau khi bắt đầu stream OBS xem sao. có thể bị lag.
+
+
+
+==========================================================================================
+- HƯỚNG DẪN KHI MUỐN ĐỔI CỔNG STREAM -
+- hiện tại chúng ta có 2 cổng là RTMP (1935) và cổng HTTP (8080)
+- chúng ta có thể thay thể nó bằng các cổng khác như:
+
+Cổng RTMP (thay thế cho 1935): 1936, 1937
+Cổng HTTP (thay thế cho 8080): 8081, 8082
+
+Các file cần sửa khi thay đổi cổng:
+* mở file bằng notepade++ sửa và lưu lại theo hướng dẫn sau:
+
+1. nginx-rtmp/conf/nginx.conf (File cấu hình chính)
+    Dòng 12: listen 1935; → đổi thành cổng RTMP mới
+    Dòng 63: listen 8080; → đổi thành cổng HTTP mới
+
+2. nginx-rtmp/start-stream.bat (Script khởi động)
+    Dòng 23: localport=8080 → đổi trong firewall rule
+    Dòng 29: localport=1935 → đổi trong firewall rule
+    
+    Dòng 72: rtmp://localhost:1935/live → đổi trong thông báo
+    Dòng 73: http://localhost:8080 → đổi trong thông báo
+    Dòng 74: http://localhost:8080/hls/live.m3u8 → đổi trong thông báo
+    Dòng 75: http://localhost:8080/stat → đổi trong thông báo
+    
+    Dòng 95: http://localhost:8080/health → đổi trong health check
+    Dòng 107: localhost:8080 → đổi trong cloudflared tunnel
+
+==========================================================================================
