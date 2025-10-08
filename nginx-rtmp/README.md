@@ -54,7 +54,7 @@ link web k xem dc, hiển thị màn hình trắng
 
 
 ==========================================================================================
-- HƯỚNG DẪN KHI MUỐN ĐỔI CỔNG STREAM -
+- HƯỚNG DẪN KHI MUỐN ĐỔI CỔNG STREAM - KHI THAY THẾ XONG THÌ CẦN CẤU HÌNH LẠI OBS ở bước 2 bên trên
 - hiện tại chúng ta có 2 cổng là RTMP (1935) và cổng HTTP (8080)
 - chúng ta có thể thay thể nó bằng các cổng khác như:
 

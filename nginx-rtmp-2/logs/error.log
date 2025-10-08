@@ -1,0 +1,2 @@
+2025/09/24 21:38:02 [notice] 15572#13396: signal process started
+2025/09/24 21:38:02 [error] 15572#13396: OpenEvent("Global\ngx_stop_12584") failed (2: The system cannot find the file specified)

@@ -20,13 +20,13 @@ REM Configure Windows Firewall
 echo [SETUP] Configuring Windows Firewall...
 netsh advfirewall firewall show rule name="NGINX-RTMP-HTTP" >nul 2>&1
 if %errorlevel% neq 0 (
-    netsh advfirewall firewall add rule name="NGINX-RTMP-HTTP" dir=in action=allow protocol=TCP localport=8081 >nul 2>&1
+    netsh advfirewall firewall add rule name="NGINX-RTMP-HTTP" dir=in action=allow protocol=TCP localport=8080 >nul 2>&1
     if %errorlevel% equ 0 echo [OK] HTTP firewall rule added
 )
 
 netsh advfirewall firewall show rule name="NGINX-RTMP-RTMP" >nul 2>&1
 if %errorlevel% neq 0 (
-    netsh advfirewall firewall add rule name="NGINX-RTMP-RTMP" dir=in action=allow protocol=TCP localport=1936 >nul 2>&1
+    netsh advfirewall firewall add rule name="NGINX-RTMP-RTMP" dir=in action=allow protocol=TCP localport=1935 >nul 2>&1
     if %errorlevel% equ 0 echo [OK] RTMP firewall rule added
 )
 
@@ -69,10 +69,10 @@ echo.
 echo ========================================
 echo          LOCAL SERVER READY
 echo ========================================
-echo [✓] RTMP Server: rtmp://localhost:1936/live
-echo [✓] HTTP Server: http://localhost:8081
-echo [✓] Live Stream: http://localhost:8081/hls/live.m3u8
-echo [✓] Statistics: http://localhost:8081/stat
+echo [✓] RTMP Server: rtmp://localhost:1935/live
+echo [✓] HTTP Server: http://localhost:8080
+echo [✓] Live Stream: http://localhost:8080/hls/live.m3u8
+echo [✓] Statistics: http://localhost:8080/stat
 echo.
 
 REM Check if cloudflared exists
@@ -92,7 +92,7 @@ echo [INFO] This will create a FREE public HTTPS URL
 echo.
 
 REM Test local server first
-powershell -Command "try { Invoke-WebRequest -Uri 'http://localhost:8081/health' -TimeoutSec 5 -UseBasicParsing | Out-Null; Write-Host '[OK] Local server responding' } catch { Write-Host '[ERROR] Local server not responding'; exit 1 }"
+powershell -Command "try { Invoke-WebRequest -Uri 'http://localhost:8080/health' -TimeoutSec 5 -UseBasicParsing | Out-Null; Write-Host '[OK] Local server responding' } catch { Write-Host '[ERROR] Local server not responding'; exit 1 }"
 if %errorlevel% neq 0 (
     echo [ERROR] Local server not ready
     pause
@@ -104,7 +104,7 @@ echo [INFO] Look for your public URL below:
 echo.
 
 REM Start cloudflared tunnel
-.\cloudflared.exe tunnel --url localhost:8081
+.\cloudflared.exe tunnel --url localhost:8080
 
 echo.
 echo ========================================
