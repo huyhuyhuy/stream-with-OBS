@@ -41,15 +41,6 @@ if %errorlevel% neq 0 (
 )
 echo [OK] Nginx configuration is valid
 
-REM Stop any running nginx processes
-tasklist /fi "imagename eq nginx.exe" 2>NUL | find /i /n "nginx.exe" >NUL
-if "%ERRORLEVEL%"=="0" (
-    echo [INFO] Stopping existing nginx processes...
-    .\nginx.exe -s stop >nul 2>&1
-    timeout /t 2 /nobreak >nul
-    taskkill /f /im nginx.exe >nul 2>&1
-)
-
 REM Start nginx
 echo [START] Starting Nginx RTMP Server...
 start /b .\nginx.exe

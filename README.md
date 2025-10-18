@@ -4,10 +4,14 @@ Phần 1: CẤU HÌNH 2 cái OBS STUDIO (là 2 bản cài hoặc portable chạy
 ├── Server: rtmp://localhost:1935/live
 └── Stream Key: live
 
+http://localhost:8080
+
 
 # Cho Stream #2 (Port 1936)
 ├── Server: rtmp://localhost:1936/live2
 └── Stream Key: live2
+
+http://localhost:8081
 
 
 * CHÚ Ý: máy phải tắt trình diệt virut đi.
