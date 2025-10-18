@@ -313,7 +313,27 @@ if "%still_running%"=="0" (
 )
 
 echo.
-echo [STEP 4] Checking ports...
+echo [STEP 4] Cleaning up Cloudflare PID files...
+set "CLEANED_COUNT=0"
+for %%p in (1935 1936 1937 1938 1939 1940 1941) do (
+    if exist "nginx_%%p\logs\cloudflare.pid" (
+        del nginx_%%p\logs\cloudflare.pid >nul 2>&1
+        if !errorlevel! equ 0 (
+            echo [OK] Deleted nginx_%%p\logs\cloudflare.pid
+            set /a CLEANED_COUNT+=1
+        ) else (
+            echo [WARNING] Failed to delete nginx_%%p\logs\cloudflare.pid
+        )
+    )
+)
+if "%CLEANED_COUNT%"=="0" (
+    echo [INFO] No Cloudflare PID files found
+) else (
+    echo [OK] Cleaned up %CLEANED_COUNT% Cloudflare PID file(s)
+)
+
+echo.
+echo [STEP 5] Checking ports...
 netstat -an | findstr ":1935\|:1936\|:1937\|:1938\|:1939\|:1940\|:1941\|:8080\|:8081\|:8082\|:8083\|:8084\|:8085\|:8086" >nul 2>&1
 if %errorlevel% equ 0 (
     echo [INFO] Some ports still bound (may take a moment to release)
