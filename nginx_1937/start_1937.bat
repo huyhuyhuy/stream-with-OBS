@@ -83,15 +83,14 @@ echo [INFO] This will create a FREE public HTTPS URL
 echo.
 
 REM Test local server first
-powershell -Command "try { Invoke-WebRequest -Uri 'http://localhost:8082/health' -TimeoutSec 5 -UseBasicParsing | Out-Null; Write-Host '[OK] Local server responding' } catch { Write-Host '[ERROR] Local server not responding'; exit 1 }"
-if %errorlevel% neq 0 (
-    echo [ERROR] Local server not ready
-    pause
-    exit /b 1
-)
+powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost:8082/' -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop; Write-Host '[OK] Local server responding' } catch { Write-Host '[WARNING] Local server check failed, but continuing...' }"
+
+REM Clean old Cloudflare PID file
+if exist "logs\cloudflare.pid" del logs\cloudflare.pid >nul 2>&1
 
 echo [START] Starting Cloudflare tunnel...
 echo [INFO] Look for your public URL below:
+echo [INFO] PID will be saved to logs\cloudflare.pid for safe stopping
 echo.
 
 REM Start cloudflared tunnel
@@ -106,4 +105,7 @@ echo [INFO] Cloudflare tunnel has stopped
 echo [RESTART] To restart everything: start_1937.bat
 echo [STOP ONLY] To stop nginx only: stop_1937.bat
 echo.
-pause
+echo [INFO] This window will close in 2 seconds...
+echo [TIP] Press any key to close immediately
+timeout /t 2
+exit

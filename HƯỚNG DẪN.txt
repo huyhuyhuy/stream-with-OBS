@@ -25,33 +25,12 @@ OBS #7: rtmp://localhost:1941/stream1941 (key: stream1941)
 ----------------------------------------------------------------------------------
 ## CHẠY STREAM
 
-# OPTION 1: Chạy TẤT CẢ 7 Streams cùng lúc 
 1. Chuột phải start-ALL.bat → "Run as administrator"
-2. Đợi 7 cửa sổ mở ra (mỗi stream 1 cửa sổ)
-3. Ghi lại 7 Cloudflare URLs từ mỗi cửa sổ
-4. Cấu hình 7 OBS instances (hoặc dùng OBS portable)
+- trong này có cả tùy chọn start riêng lẻ
+
 * Dừng tất cả:
 Chuột phải stop-all.bat → "Run as administrator"
-
-
-# OPTION 2: Chạy từng Stream riêng lẻ
-
-**Khởi động Stream #1:**
-1. Vào thư mục: nginx_1935/
-2. Chuột phải start_1935.bat → "Run as administrator"
-3. Ghi lại Cloudflare URL
-4. OBS: rtmp://localhost:1935/stream1935 (key: stream1935)
-
-**Dừng Stream #1:**
-Vào nginx_1935/ → Chuột phải stop_1935.bat → "Run as administrator"
-
-**Tương tự cho các streams khác:**
-- Stream #2: nginx_1936/start_1936.bat
-- Stream #3: nginx_1937/start_1937.bat
-- Stream #4: nginx_1938/start_1938.bat
-- Stream #5: nginx_1939/start_1939.bat
-- Stream #6: nginx_1940/start_1940.bat
-- Stream #7: nginx_1941/start_1941.bat
+- trong này có cả tùy chọn stop riêng lẻ
 
 ----------------------------------------------------------------------------------
 
@@ -69,5 +48,12 @@ tasklist | findstr "nginx.exe cloudflared.exe"
 
 # Check ports
 netstat -an | findstr ":1935 :1936 :1937 :1938 :1939 :1940 :1941"
+
+check server
+netstat -ano
+
+check ngnix
+tasklist /fi "imagename eq nginx.exe"
+
 
 ----------------------------------------------------------------------------------

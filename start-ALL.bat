@@ -25,8 +25,9 @@ echo   [A] Start ALL 7 Streams
 echo   [X] Exit
 echo.
 echo ========================================
+echo [TIP] You can select multiple streams: 1,2,3
 echo.
-set /p "CHOICE=Enter your choice (1-7, A for all, X to exit): "
+set /p "CHOICE=Enter your choice (1-7, 1,2,3..., A for all, X to exit): "
 
 REM Convert to uppercase
 if /i "%CHOICE%"=="a" set "CHOICE=A"
@@ -50,6 +51,10 @@ if "%CHOICE%"=="X" (
 )
 
 if "%CHOICE%"=="A" goto START_ALL
+
+REM Check if input contains comma (multi-select)
+echo %CHOICE% | findstr "," >nul 2>&1
+if %errorlevel% equ 0 goto START_MULTI
 
 REM Single stream selection
 if "%CHOICE%"=="1" set "PORT=1935" & goto START_SINGLE
@@ -85,10 +90,14 @@ call :ADD_FIREWALL_SINGLE %PORT%
 echo.
 
 echo [INFO] Launching Stream %PORT% in new window...
-start "NGINX-RTMP %PORT%" cmd /k "cd /d nginx_%PORT% && start_%PORT%.bat"
+start "NGINX-RTMP %PORT%" cmd /k "cd /d "%~dp0nginx_%PORT%" && start_%PORT%.bat"
 
 echo.
 echo [OK] Stream %PORT% window opened!
+echo.
+echo [INFO] Saving Cloudflare PID...
+timeout /t 8 /nobreak >nul
+call "%~dp0save_cf_pid.bat" %PORT%
 echo.
 echo Check the new window for Cloudflare URL.
 echo.
@@ -101,6 +110,141 @@ pause
 REM Ask if want to start another
 echo.
 set /p "ANOTHER=Start another stream? (Y/N): "
+if /i "%ANOTHER%"=="Y" goto MENU
+exit /b 0
+
+:START_MULTI
+cls
+echo ========================================
+echo   STARTING MULTIPLE STREAMS
+echo ========================================
+echo.
+
+REM Parse comma-separated input
+echo [INFO] Parsing your selection: %CHOICE%
+echo.
+
+REM Remove spaces from input
+set "CHOICE=%CHOICE: =%"
+
+REM Build list of valid ports
+set "SELECTED_PORTS="
+set "SELECTED_COUNT=0"
+
+REM Process each number
+for %%n in (%CHOICE:,= %) do (
+    set "NUM=%%n"
+    set "VALID=0"
+    
+    REM Validate number is 1-7
+    if "!NUM!"=="1" set "VALID=1" & set "TEMP_PORT=1935"
+    if "!NUM!"=="2" set "VALID=1" & set "TEMP_PORT=1936"
+    if "!NUM!"=="3" set "VALID=1" & set "TEMP_PORT=1937"
+    if "!NUM!"=="4" set "VALID=1" & set "TEMP_PORT=1938"
+    if "!NUM!"=="5" set "VALID=1" & set "TEMP_PORT=1939"
+    if "!NUM!"=="6" set "VALID=1" & set "TEMP_PORT=1940"
+    if "!NUM!"=="7" set "VALID=1" & set "TEMP_PORT=1941"
+    
+    if "!VALID!"=="1" (
+        REM Check for duplicates
+        echo !SELECTED_PORTS! | findstr "\<!TEMP_PORT!\>" >nul 2>&1
+        if !errorlevel! neq 0 (
+            set "SELECTED_PORTS=!SELECTED_PORTS! !TEMP_PORT!"
+            set /a SELECTED_COUNT+=1
+            echo [OK] Stream !NUM! ^(Port !TEMP_PORT!^) added to queue
+        ) else (
+            echo [INFO] Stream !NUM! ^(Port !TEMP_PORT!^) already selected, skipping
+        )
+    ) else (
+        echo [WARNING] Invalid selection: %%n ^(ignored^)
+    )
+)
+
+REM Trim leading space
+set "SELECTED_PORTS=%SELECTED_PORTS:~1%"
+
+if "%SELECTED_COUNT%"=="0" (
+    echo.
+    echo [ERROR] No valid streams selected!
+    pause
+    goto MENU
+)
+
+echo.
+echo ========================================
+echo   SUMMARY
+echo ========================================
+echo.
+echo Selected streams: %SELECTED_COUNT%
+for %%p in (%SELECTED_PORTS%) do (
+    echo   - Stream %%p ^(rtmp://localhost:%%p/stream%%p^)
+)
+echo.
+pause
+
+echo.
+echo ========================================
+echo   CONFIGURING WINDOWS FIREWALL
+echo ========================================
+echo [SETUP] Adding firewall rules for selected streams...
+
+REM Add firewall for each selected port
+for %%p in (%SELECTED_PORTS%) do (
+    call :ADD_FIREWALL_SINGLE %%p
+)
+
+echo [OK] Firewall configuration complete!
+echo.
+timeout /t 2 /nobreak >nul
+
+REM Start each selected stream
+set "STREAM_INDEX=1"
+for %%p in (%SELECTED_PORTS%) do (
+    echo.
+    echo ========================================
+    echo   STARTING STREAM !STREAM_INDEX! of %SELECTED_COUNT% ^(Port %%p^)
+    echo ========================================
+    echo [START] Launching Stream %%p in new window...
+    start "NGINX-RTMP %%p" cmd /k "cd /d "%~dp0nginx_%%p" && start_%%p.bat"
+    
+    REM Wait between starts to avoid resource spike
+    if !STREAM_INDEX! LSS %SELECTED_COUNT% (
+        echo [WAIT] Waiting 8 seconds before starting next stream...
+        timeout /t 8 /nobreak >nul
+    )
+    
+    set /a STREAM_INDEX+=1
+)
+
+echo.
+echo ========================================
+echo   SELECTED STREAMS LAUNCHING
+echo ========================================
+echo.
+for %%p in (%SELECTED_PORTS%) do (
+    echo [✓] Stream %%p window opened ^(nginx_%%p^)
+)
+echo.
+echo [INFO] Saving Cloudflare PIDs for all selected streams...
+timeout /t 8 /nobreak >nul
+call "%~dp0save_cf_pid.bat" %SELECTED_PORTS%
+echo.
+echo [INFO] Check the new windows for Cloudflare URLs
+echo [INFO] It may take 1-2 minutes for all to initialize
+echo.
+echo ========================================
+echo   OBS CONFIGURATION
+echo ========================================
+echo.
+for %%p in (%SELECTED_PORTS%) do (
+    echo rtmp://localhost:%%p/stream%%p ^(key: stream%%p^)
+)
+echo.
+pause
+
+REM Ask if want to start another
+echo.
+set /p "ANOTHER=Start more streams? (Y/N): "
 if /i "%ANOTHER%"=="Y" goto MENU
 exit /b 0
 
@@ -149,7 +293,7 @@ for %%p in (%PORTS%) do (
     echo   STARTING STREAM !INDEX! (Port %%p)
     echo ========================================
     echo [START] Launching Stream !INDEX! in new window...
-    start "NGINX-RTMP %%p" cmd /k "cd /d nginx_%%p && start_%%p.bat"
+    start "NGINX-RTMP %%p" cmd /k "cd /d "%~dp0nginx_%%p" && start_%%p.bat"
     
     REM Wait between starts to avoid resource spike
     if !INDEX! LSS 7 (
@@ -172,6 +316,10 @@ echo [✓] Stream 4 window opened (nginx_1938)
 echo [✓] Stream 5 window opened (nginx_1939)
 echo [✓] Stream 6 window opened (nginx_1940)
 echo [✓] Stream 7 window opened (nginx_1941)
+echo.
+echo [INFO] Saving Cloudflare PIDs for all 7 streams...
+timeout /t 8 /nobreak >nul
+call "%~dp0save_cf_pid.bat" 1935 1936 1937 1938 1939 1940 1941
 echo.
 echo [INFO] Check the seven new windows for Cloudflare URLs
 echo [INFO] It may take 1-2 minutes for all to initialize

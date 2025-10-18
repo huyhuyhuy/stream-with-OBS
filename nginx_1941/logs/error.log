@@ -1,0 +1,19 @@
+2025/10/18 18:09:26 [notice] 12848#7072: signal process started
+2025/10/18 18:09:26 [error] 12848#7072: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:15:29 [notice] 4136#484: signal process started
+2025/10/18 18:15:29 [error] 4136#484: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:25:23 [notice] 7956#8068: signal process started
+2025/10/18 18:25:23 [error] 7956#8068: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:29:51 [notice] 15396#8044: signal process started
+2025/10/18 18:29:51 [error] 15396#8044: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:34:07 [notice] 9904#14968: signal process started
+2025/10/18 18:34:07 [error] 9904#14968: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:38:54 [notice] 16332#20048: signal process started
+2025/10/18 18:38:54 [error] 16332#20048: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:46:17 [notice] 1828#10932: signal process started
+2025/10/18 18:46:17 [error] 1828#10932: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:48:36 [notice] 11444#10268: signal process started
+2025/10/18 19:00:03 [notice] 14048#12576: signal process started
+2025/10/18 19:00:03 [error] 14048#12576: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 19:01:43 [notice] 9248#10404: signal process started
+2025/10/18 19:01:43 [error] 9248#10404: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1941/logs/nginx.pid" failed (2: The system cannot find the file specified)

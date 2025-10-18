@@ -44,8 +44,9 @@ echo.
 echo ========================================
 echo Total running: !RUNNING_COUNT! stream(s)
 echo ========================================
+echo [TIP] You can select multiple streams: 1,2,3
 echo.
-set /p "CHOICE=Enter your choice (1-7, A for all, X to exit): "
+set /p "CHOICE=Enter your choice (1-7, 1,2,3..., A for all, X to exit): "
 
 REM Convert to uppercase
 if /i "%CHOICE%"=="a" set "CHOICE=A"
@@ -59,6 +60,10 @@ if "%CHOICE%"=="X" (
 )
 
 if "%CHOICE%"=="A" goto STOP_ALL
+
+REM Check if input contains comma (multi-select)
+echo %CHOICE% | findstr "," >nul 2>&1
+if %errorlevel% equ 0 goto STOP_MULTI
 
 REM Single stream selection
 if "%CHOICE%"=="1" set "PORT=1935" & goto STOP_SINGLE
@@ -101,6 +106,126 @@ pause
 REM Ask if want to stop another
 echo.
 set /p "ANOTHER=Stop another stream? (Y/N): "
+if /i "%ANOTHER%"=="Y" goto MENU
+exit /b 0
+
+:STOP_MULTI
+cls
+echo ========================================
+echo   STOPPING MULTIPLE STREAMS
+echo ========================================
+echo.
+
+REM Parse comma-separated input
+echo [INFO] Parsing your selection: %CHOICE%
+echo.
+
+REM Remove spaces from input
+set "CHOICE=%CHOICE: =%"
+
+REM Build list of valid ports
+set "SELECTED_PORTS="
+set "SELECTED_COUNT=0"
+
+REM Process each number
+for %%n in (%CHOICE:,= %) do (
+    set "NUM=%%n"
+    set "VALID=0"
+    
+    REM Validate number is 1-7
+    if "!NUM!"=="1" set "VALID=1" & set "TEMP_PORT=1935"
+    if "!NUM!"=="2" set "VALID=1" & set "TEMP_PORT=1936"
+    if "!NUM!"=="3" set "VALID=1" & set "TEMP_PORT=1937"
+    if "!NUM!"=="4" set "VALID=1" & set "TEMP_PORT=1938"
+    if "!NUM!"=="5" set "VALID=1" & set "TEMP_PORT=1939"
+    if "!NUM!"=="6" set "VALID=1" & set "TEMP_PORT=1940"
+    if "!NUM!"=="7" set "VALID=1" & set "TEMP_PORT=1941"
+    
+    if "!VALID!"=="1" (
+        REM Check for duplicates
+        echo !SELECTED_PORTS! | findstr "\<!TEMP_PORT!\>" >nul 2>&1
+        if !errorlevel! neq 0 (
+            REM Check if this stream is actually running
+            if exist "nginx_!TEMP_PORT!\logs\nginx.pid" (
+                for /f %%i in (nginx_!TEMP_PORT!\logs\nginx.pid) do (
+                    tasklist /FI "PID eq %%i" 2>NUL | find "%%i" >NUL
+                    if !errorlevel! equ 0 (
+                        set "SELECTED_PORTS=!SELECTED_PORTS! !TEMP_PORT!"
+                        set /a SELECTED_COUNT+=1
+                        echo [OK] Stream !NUM! ^(Port !TEMP_PORT!^) added to stop queue
+                    ) else (
+                        echo [INFO] Stream !NUM! ^(Port !TEMP_PORT!^) is not running, skipping
+                    )
+                )
+            ) else (
+                echo [INFO] Stream !NUM! ^(Port !TEMP_PORT!^) is not running, skipping
+            )
+        ) else (
+            echo [INFO] Stream !NUM! ^(Port !TEMP_PORT!^) already selected, skipping
+        )
+    ) else (
+        echo [WARNING] Invalid selection: %%n ^(ignored^)
+    )
+)
+
+REM Trim leading space
+set "SELECTED_PORTS=%SELECTED_PORTS:~1%"
+
+if "%SELECTED_COUNT%"=="0" (
+    echo.
+    echo [INFO] No running streams selected!
+    echo [INFO] All selected streams are already stopped.
+    pause
+    goto MENU
+)
+
+echo.
+echo ========================================
+echo   SUMMARY
+echo ========================================
+echo.
+echo Streams to stop: %SELECTED_COUNT%
+for %%p in (%SELECTED_PORTS%) do (
+    echo   - Stream %%p ^(nginx_%%p^)
+)
+echo.
+pause
+
+REM Stop each selected stream using safe PID-based method
+set "STREAM_INDEX=1"
+for %%p in (%SELECTED_PORTS%) do (
+    echo.
+    echo ========================================
+    echo   STOPPING STREAM !STREAM_INDEX! of %SELECTED_COUNT% ^(Port %%p^)
+    echo ========================================
+    
+    if not exist "nginx_%%p\stop_%%p.bat" (
+        echo [ERROR] nginx_%%p\stop_%%p.bat not found!
+    ) else (
+        echo [INFO] Stopping Stream %%p using safe PID-based method...
+        cd nginx_%%p >nul 2>&1
+        call stop_%%p.bat
+        cd .. >nul 2>&1
+        echo [OK] Stream %%p stopped!
+    )
+    
+    set /a STREAM_INDEX+=1
+)
+
+echo.
+echo ========================================
+echo   SELECTED STREAMS STOPPED
+echo ========================================
+echo.
+for %%p in (%SELECTED_PORTS%) do (
+    echo [✓] Stream %%p stopped ^(nginx_%%p^)
+)
+echo.
+pause
+
+REM Ask if want to stop another
+echo.
+set /p "ANOTHER=Stop more streams? (Y/N): "
 if /i "%ANOTHER%"=="Y" goto MENU
 exit /b 0
 

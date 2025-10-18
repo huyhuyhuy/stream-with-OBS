@@ -13,32 +13,45 @@ echo ========================================
 echo.
 
 REM ============================================
-REM STEP 1: Stop Cloudflare tunnel (SMART - only from this directory)
+REM STEP 1: Stop Cloudflare tunnel (USING SAVED PID)
 REM ============================================
-echo [STEP 1] Looking for Cloudflare tunnel started from THIS directory...
-set "CF_STOPPED=0"
+echo [STEP 1] Stopping Cloudflare tunnel from THIS directory...
 
-REM Get list of all cloudflared.exe PIDs
-for /f "skip=3 tokens=2" %%i in ('tasklist /fi "imagename eq cloudflared.exe" 2^>nul') do (
-    set "CF_PID=%%i"
+if exist "logs\cloudflare.pid" (
+    echo [INFO] Found Cloudflare PID file: logs\cloudflare.pid
     
-    REM Skip if PID is not numeric
-    echo !CF_PID! | findstr /r "^[0-9][0-9]*$" >nul 2>&1
-    if !errorlevel! equ 0 (
-        REM Check if this PID's command line contains our directory path
-        for /f "tokens=*" %%c in ('wmic process where "ProcessId=!CF_PID!" get CommandLine 2^>nul ^| findstr /i "%~dp0"') do (
-            echo [INFO] Found Cloudflare tunnel ^(PID: !CF_PID!^) from this directory
+    REM Read PID from file
+    set /p CF_PID=<logs\cloudflare.pid
+    
+    REM Trim leading/trailing spaces
+    for /f "tokens=*" %%a in ("!CF_PID!") do set "CF_PID=%%a"
+    
+    REM Simple validation: just check if not empty
+    if not "!CF_PID!"=="" (
+        REM Check if process exists
+        tasklist /FI "PID eq !CF_PID!" /FI "IMAGENAME eq cloudflared.exe" 2>NUL | find "!CF_PID!" >NUL
+        if !errorlevel! equ 0 (
+            echo [INFO] Cloudflare tunnel is running ^(PID: !CF_PID!^)
+            echo [INFO] Stopping Cloudflare tunnel...
             taskkill /F /PID !CF_PID! >nul 2>&1
             if !errorlevel! equ 0 (
                 echo [OK] Cloudflare tunnel stopped ^(PID: !CF_PID!^)
-                set "CF_STOPPED=1"
+            ) else (
+                echo [WARNING] Failed to stop Cloudflare tunnel
             )
+        ) else (
+            echo [INFO] Cloudflare process not found ^(PID !CF_PID! already stopped^)
         )
+    ) else (
+        echo [WARNING] Invalid PID in cloudflare.pid file
     )
-)
-
-if "!CF_STOPPED!"=="0" (
-    echo [INFO] No Cloudflare tunnel found from this directory
+    
+    REM Clean up PID file
+    del logs\cloudflare.pid >nul 2>&1
+    echo [INFO] Cleaned up Cloudflare PID file
+) else (
+    echo [INFO] No Cloudflare PID file found ^(logs\cloudflare.pid^)
+    echo [INFO] Cloudflare may not be running from this directory
 )
 
 echo.

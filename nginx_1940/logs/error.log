@@ -1,0 +1,19 @@
+2025/10/18 18:09:26 [notice] 13792#5132: signal process started
+2025/10/18 18:09:26 [error] 13792#5132: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:15:29 [notice] 11960#11432: signal process started
+2025/10/18 18:15:29 [error] 11960#11432: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:25:23 [notice] 10496#20156: signal process started
+2025/10/18 18:25:23 [error] 10496#20156: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:29:51 [notice] 1472#5772: signal process started
+2025/10/18 18:29:51 [error] 1472#5772: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:34:07 [notice] 19340#1200: signal process started
+2025/10/18 18:34:07 [error] 19340#1200: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:38:54 [notice] 14504#12672: signal process started
+2025/10/18 18:38:54 [error] 14504#12672: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:46:17 [notice] 17444#1812: signal process started
+2025/10/18 18:46:17 [error] 17444#1812: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:48:36 [notice] 20360#6324: signal process started
+2025/10/18 18:48:36 [error] 20360#6324: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 19:00:03 [notice] 12952#4832: signal process started
+2025/10/18 19:00:03 [error] 12952#4832: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1940/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 19:01:43 [notice] 9960#14116: signal process started

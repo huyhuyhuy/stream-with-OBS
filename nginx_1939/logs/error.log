@@ -1,0 +1,17 @@
+2025/10/18 18:09:26 [notice] 16572#6324: signal process started
+2025/10/18 18:09:26 [error] 16572#6324: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:15:29 [notice] 1636#3216: signal process started
+2025/10/18 18:15:29 [error] 1636#3216: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:25:23 [notice] 3392#3908: signal process started
+2025/10/18 18:25:23 [error] 3392#3908: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:29:51 [notice] 15340#12384: signal process started
+2025/10/18 18:29:51 [error] 15340#12384: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:34:07 [notice] 5620#14716: signal process started
+2025/10/18 18:34:07 [error] 5620#14716: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:38:54 [notice] 16296#7180: signal process started
+2025/10/18 18:38:54 [error] 16296#7180: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:46:17 [notice] 19840#9552: signal process started
+2025/10/18 18:48:36 [notice] 10780#8404: signal process started
+2025/10/18 19:00:03 [notice] 18316#7628: signal process started
+2025/10/18 19:00:03 [error] 18316#7628: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1939/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 19:01:43 [notice] 5712#9428: signal process started

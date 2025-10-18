@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 title NGINX-RTMP 1936
-color 0B
+color 0A
 cd /d "%~dp0"
 
 echo ========================================
@@ -9,7 +9,7 @@ echo   LIVE STREAMING SERVER + PUBLIC TUNNEL
 echo ========================================
 echo.
 
-REM Create directories 
+REM Create directories
 if not exist "html\hls1936" mkdir "html\hls1936" >nul 2>&1
 if not exist "html\dash1936" mkdir "html\dash1936" >nul 2>&1
 if not exist "html\recordings" mkdir "html\recordings" >nul 2>&1
@@ -21,13 +21,13 @@ echo [SETUP] Configuring Windows Firewall...
 netsh advfirewall firewall show rule name="NGINX-RTMP-HTTP-1936" >nul 2>&1
 if %errorlevel% neq 0 (
     netsh advfirewall firewall add rule name="NGINX-RTMP-HTTP-1936" dir=in action=allow protocol=TCP localport=8081 >nul 2>&1
-    if %errorlevel% equ 0 echo [OK] HTTP firewall rule added (port 8081)
+    if %errorlevel% equ 0 echo [OK] HTTP firewall rule added
 )
 
 netsh advfirewall firewall show rule name="NGINX-RTMP-RTMP-1936" >nul 2>&1
 if %errorlevel% neq 0 (
     netsh advfirewall firewall add rule name="NGINX-RTMP-RTMP-1936" dir=in action=allow protocol=TCP localport=1936 >nul 2>&1
-    if %errorlevel% equ 0 echo [OK] RTMP firewall rule added (port 1936)
+    if %errorlevel% equ 0 echo [OK] RTMP firewall rule added
 )
 
 REM Test nginx configuration
@@ -83,15 +83,14 @@ echo [INFO] This will create a FREE public HTTPS URL
 echo.
 
 REM Test local server first
-powershell -Command "try { Invoke-WebRequest -Uri 'http://localhost:8081/health' -TimeoutSec 5 -UseBasicParsing | Out-Null; Write-Host '[OK] Local server responding' } catch { Write-Host '[ERROR] Local server not responding'; exit 1 }"
-if %errorlevel% neq 0 (
-    echo [ERROR] Local server not ready
-    pause
-    exit /b 1
-)
+powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost:8081/' -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop; Write-Host '[OK] Local server responding' } catch { Write-Host '[WARNING] Local server check failed, but continuing...' }"
+
+REM Clean old Cloudflare PID file
+if exist "logs\cloudflare.pid" del logs\cloudflare.pid >nul 2>&1
 
 echo [START] Starting Cloudflare tunnel...
 echo [INFO] Look for your public URL below:
+echo [INFO] PID will be saved to logs\cloudflare.pid for safe stopping
 echo.
 
 REM Start cloudflared tunnel
@@ -106,4 +105,7 @@ echo [INFO] Cloudflare tunnel has stopped
 echo [RESTART] To restart everything: start_1936.bat
 echo [STOP ONLY] To stop nginx only: stop_1936.bat
 echo.
-pause
+echo [INFO] This window will close in 2 seconds...
+echo [TIP] Press any key to close immediately
+timeout /t 2
+exit

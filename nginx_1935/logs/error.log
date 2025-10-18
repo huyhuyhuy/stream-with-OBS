@@ -1,0 +1,23 @@
+2025/10/18 18:09:26 [notice] 15160#14924: signal process started
+2025/10/18 18:11:14 [notice] 8256#5068: signal process started
+2025/10/18 18:15:29 [notice] 19836#11980: signal process started
+2025/10/18 18:15:29 [error] 19836#11980: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:17:25 [notice] 20188#7084: signal process started
+2025/10/18 18:21:40 [notice] 1388#15184: signal process started
+2025/10/18 18:25:23 [notice] 2960#20208: signal process started
+2025/10/18 18:25:23 [error] 2960#20208: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:29:06 [notice] 14132#13672: signal process started
+2025/10/18 18:29:51 [notice] 9424#4176: signal process started
+2025/10/18 18:29:51 [error] 9424#4176: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:31:06 [notice] 15296#5704: signal process started
+2025/10/18 18:34:07 [notice] 7356#10928: signal process started
+2025/10/18 18:34:07 [error] 7356#10928: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:35:51 [notice] 16220#14120: signal process started
+2025/10/18 18:38:54 [notice] 12404#16184: signal process started
+2025/10/18 18:38:54 [error] 12404#16184: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2025/10/18 18:40:48 [notice] 14208#14596: signal process started
+2025/10/18 18:46:17 [notice] 16180#15636: signal process started
+2025/10/18 18:48:36 [notice] 10496#13084: signal process started
+2025/10/18 19:00:03 [notice] 16712#19652: signal process started
+2025/10/18 19:01:42 [notice] 11068#18364: signal process started
+2025/10/18 19:01:42 [error] 11068#18364: CreateFile() "D:\DEV_TOOL\stream_OBS\nginx_1935/logs/nginx.pid" failed (2: The system cannot find the file specified)
